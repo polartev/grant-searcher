@@ -12,9 +12,9 @@ namespace Grant_Searcher
         public string Name { get; set; }
         public string Mission { get; set; }
         public string Geography { get; set; }
-        public string GrantType { get; set; }
-        public string Services { get; set; }
-        public string TargetAudience { get; set; }
+        public string AwardCeiling { get; set; }
+        public string AwardFloor { get; set; }
+        public string Agency { get; set; }
     }
 
     // Model for representing a grant
@@ -30,4 +30,3 @@ namespace Grant_Searcher
         public string GrantType { get; set; }
     }
 }
-

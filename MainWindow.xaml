@@ -34,18 +34,18 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-                <Label Content="Grant Type:" Width="150"/>
-                <TextBox x:Name="GrantTypeTextBox" Width="600"/>
+                <Label Content="Award Ceiling:" Width="150"/>
+                <TextBox x:Name="AwardCeilingTextBox" Width="600"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-                <Label Content="Services:" Width="150"/>
-                <TextBox x:Name="ServicesTextBox" Width="600"/>
+                <Label Content="Award Floor:" Width="150"/>
+                <TextBox x:Name="AwardFloorTextBox" Width="600"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-                <Label Content="Target Audience:" Width="150"/>
-                <TextBox x:Name="TargetAudienceTextBox" Width="600"/>
+                <Label Content="Agency:" Width="150"/>
+                <TextBox x:Name="AgencyTextBox" Width="600"/>
             </StackPanel>
         </StackPanel>
 

@@ -40,7 +40,7 @@ namespace Grant_Searcher
                         Eligibility = grantElement.Element(ns + "EligibleApplicants")?.Value,
                         Deadline = grantElement.Element(ns + "CloseDate")?.Value,
                         Link = grantElement.Element(ns + "OpportunityNumber") != null ?
-                               $"https://www.grants.gov/web/grants/view-opportunity.html?oppId={grantElement.Element(ns + "OpportunityID")?.Value}" :
+                               $"https://www.grants.gov/search-results-detail/{grantElement.Element(ns + "OpportunityID")?.Value}" :
                                null,
                         Geography = grantElement.Element(ns + "Locations")?.Value,
                         GrantType = grantElement.Element(ns + "FundingInstrumentType")?.Value
@@ -82,11 +82,11 @@ namespace Grant_Searcher
                 }
             }
 
-            if (!string.IsNullOrEmpty(orgInfo.GrantType))
+            if (!string.IsNullOrEmpty(orgInfo.AwardCeiling))
             {
                 if (grant.GrantType != null)
                 {
-                    matches &= grant.GrantType.IndexOf(orgInfo.GrantType, StringComparison.OrdinalIgnoreCase) >= 0;
+                    matches &= grant.GrantType.IndexOf(orgInfo.AwardCeiling, StringComparison.OrdinalIgnoreCase) >= 0;
                 }
                 else
                 {
@@ -94,9 +94,9 @@ namespace Grant_Searcher
                 }
             }
 
-            if (!string.IsNullOrEmpty(orgInfo.Services))
+            if (!string.IsNullOrEmpty(orgInfo.AwardFloor))
             {
-                var serviceKeywords = orgInfo.Services.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                var serviceKeywords = orgInfo.AwardFloor.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                 bool servicesMatch = serviceKeywords.All(keyword =>
                     (grant.Title != null && grant.Title.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0) ||
                     (grant.Description != null && grant.Description.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0)
@@ -104,11 +104,11 @@ namespace Grant_Searcher
                 matches &= servicesMatch;
             }
 
-            if (!string.IsNullOrEmpty(orgInfo.TargetAudience))
+            if (!string.IsNullOrEmpty(orgInfo.Agency))
             {
                 if (grant.Eligibility != null)
                 {
-                    matches &= grant.Eligibility.IndexOf(orgInfo.TargetAudience, StringComparison.OrdinalIgnoreCase) >= 0;
+                    matches &= grant.Eligibility.IndexOf(orgInfo.Agency, StringComparison.OrdinalIgnoreCase) >= 0;
                 }
                 else
                 {

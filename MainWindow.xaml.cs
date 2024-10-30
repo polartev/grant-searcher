@@ -142,14 +142,14 @@ namespace Grant_Searcher
                 Name = NameTextBox.Text.Trim(),
                 Mission = MissionTextBox.Text.Trim(),
                 Geography = GeographyTextBox.Text.Trim(),
-                GrantType = GrantTypeTextBox.Text.Trim(),
-                Services = ServicesTextBox.Text.Trim(),
-                TargetAudience = TargetAudienceTextBox.Text.Trim()
+                AwardCeiling = AwardCeilingTextBox.Text.Trim(),
+                AwardFloor = AwardFloorTextBox.Text.Trim(),
+                Agency = AgencyTextBox.Text.Trim()
             };
 
-            if (string.IsNullOrEmpty(orgInfo.Name) || string.IsNullOrEmpty(orgInfo.Mission))
+            if (string.IsNullOrEmpty(orgInfo.Mission))
             {
-                MessageBox.Show("Please fill in the required fields: Name and Mission.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Please fill in the required fields: Mission.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 

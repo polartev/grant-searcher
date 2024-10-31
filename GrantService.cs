@@ -42,7 +42,8 @@ namespace Grant_Searcher
                         Link = grantElement.Element(ns + "OpportunityNumber") != null ?
                                $"https://www.grants.gov/search-results-detail/{grantElement.Element(ns + "OpportunityID")?.Value}" :
                                null,
-                        Geography = grantElement.Element(ns + "Locations")?.Value,
+                        AwardCeiling = grantElement.Element(ns + "AwardCeiling")?.Value,
+                        AwardFloor = grantElement.Element(ns + "AwardFloor")?.Value,
                         GrantType = grantElement.Element(ns + "FundingInstrumentType")?.Value
                     };
 
@@ -60,6 +61,22 @@ namespace Grant_Searcher
         {
             bool matches = true;
 
+            string currentTime = DateTime.Now.ToString("MMddyyyy");
+
+            if (!string.IsNullOrEmpty(grant.Deadline))
+            {
+                if (DateTime.TryParseExact(grant.Deadline, "MMddyyyy", null, System.Globalization.DateTimeStyles.None, out DateTime deadlineDate) &&
+                    DateTime.TryParseExact(currentTime, "MMddyyyy", null, System.Globalization.DateTimeStyles.None, out DateTime currentDate))
+                {
+                    if (deadlineDate <= currentDate)
+                        matches = false;
+                }
+                else
+                {
+                    matches = false;
+                }
+            }
+
             if (!string.IsNullOrEmpty(orgInfo.Mission))
             {
                 var missionKeywords = orgInfo.Mission.Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -72,9 +89,9 @@ namespace Grant_Searcher
 
             if (!string.IsNullOrEmpty(orgInfo.Geography))
             {
-                if (grant.Geography != null)
+                if (grant.Description != null)
                 {
-                    matches &= grant.Geography.IndexOf(orgInfo.Geography, StringComparison.OrdinalIgnoreCase) >= 0;
+                    matches &= orgInfo.Geography.IndexOf(grant.Description, StringComparison.OrdinalIgnoreCase) >= 0;
                 }
                 else
                 {
@@ -82,11 +99,12 @@ namespace Grant_Searcher
                 }
             }
 
-            if (!string.IsNullOrEmpty(orgInfo.AwardCeiling))
+            // Check AwardCeiling
+            if (!string.IsNullOrEmpty(orgInfo.AwardCeiling) && decimal.TryParse(orgInfo.AwardCeiling, out var orgAwardCeiling))
             {
-                if (grant.GrantType != null)
+                if (decimal.TryParse(grant.AwardCeiling, out var grantAwardCeiling))
                 {
-                    matches &= grant.GrantType.IndexOf(orgInfo.AwardCeiling, StringComparison.OrdinalIgnoreCase) >= 0;
+                    matches &= grantAwardCeiling <= orgAwardCeiling;
                 }
                 else
                 {
@@ -94,14 +112,17 @@ namespace Grant_Searcher
                 }
             }
 
-            if (!string.IsNullOrEmpty(orgInfo.AwardFloor))
+            // Check AwardFloor
+            if (!string.IsNullOrEmpty(orgInfo.AwardFloor) && decimal.TryParse(orgInfo.AwardFloor, out var orgAwardFloor))
             {
-                var serviceKeywords = orgInfo.AwardFloor.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                bool servicesMatch = serviceKeywords.All(keyword =>
-                    (grant.Title != null && grant.Title.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0) ||
-                    (grant.Description != null && grant.Description.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0)
-                );
-                matches &= servicesMatch;
+                if (decimal.TryParse(grant.AwardFloor, out var grantAwardFloor))
+                {
+                    matches &= grantAwardFloor >= orgAwardFloor;
+                }
+                else
+                {
+                    matches = false;
+                }
             }
 
             if (!string.IsNullOrEmpty(orgInfo.Agency))

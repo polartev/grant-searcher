@@ -26,7 +26,8 @@ namespace Grant_Searcher
         public string Eligibility { get; set; }
         public string Deadline { get; set; }
         public string Link { get; set; }
-        public string Geography { get; set; }
+        public string AwardCeiling { get; set; }
+        public string AwardFloor { get; set; }
         public string GrantType { get; set; }
     }
 }
